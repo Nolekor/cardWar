@@ -10,33 +10,54 @@ let playerScore = 0;
 shuffleBtn.addEventListener("click", handleClick);
 drawBtn.addEventListener("click", drawCards);
 
-function handleClick() {
-  fetch("https://apis.scrimba.com/deckofcards/api/deck/new/shuffle/")
-    .then((res) => res.json())
-    .then((deck) => (deckId = deck.deck_id));
+async function handleClick() {
+  const res = await fetch(
+    "https://apis.scrimba.com/deckofcards/api/deck/new/shuffle/"
+  );
+  const deck = await res.json();
+  deckId = deck.deck_id;
+  displayRemaining(deck.remaining);
   draw.disabled = false;
-
   if (deckId) {
     shuffleBtn.classList.add("hidden");
     drawBtn.classList.remove("hidden");
     deckHolder.classList.remove("hidden");
   }
+  // .then((res) => res.json())
+  // .then((deck) => {
+  //   deck = deck;
+  //   deckId = deck.deck_id;
+  //   displayRemaining(deck.remaining);
+  //   draw.disabled = false;
+  // })
+  // .then(() => {
+  //   if (deckId) {
+  //     shuffleBtn.classList.add("hidden");
+  //     drawBtn.classList.remove("hidden");
+  //     deckHolder.classList.remove("hidden");
+  //   }
+  // });
 }
-function drawCards() {
-  fetch(`https://apis.scrimba.com/deckofcards/api/deck/${deckId}/draw/?count=2`)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-      renderCards(data);
-    });
+async function drawCards() {
+  const res = await fetch(
+    `https://apis.scrimba.com/deckofcards/api/deck/${deckId}/draw/?count=2`
+  );
+  const data = await res.json();
+  renderCards(data);
+  displayRemaining(data.remaining);
+  // .then((data) => {
+  //   console.log(data);
+  //   renderCards(data);
+  //   displayRemaining(data.remaining);
+  // });
 }
 function renderCards(data) {
   document.getElementById("computer-card").src = `${data.cards[0].image}`;
   document.getElementById("player-card").src = `${data.cards[1].image}`;
-  deckHolder.textContent = "Remaining cards: " + data.remaining;
   higherScore(data.cards[0].value, data.cards[1].value);
   if (data.remaining === 0) {
     checkWinner(playerScore, computerScore);
+    draw.disabled = true;
   }
 }
 
@@ -57,11 +78,9 @@ function higherScore(card1, card2) {
     "ACE",
   ];
   if (cards.indexOf(card1) > cards.indexOf(card2)) {
-    console.log("computerWon");
     document.getElementById("computer-score").textContent =
       "Computer: " + ++computerScore;
   } else if (cards.indexOf(card1) < cards.indexOf(card2)) {
-    console.log("playerWon");
     document.getElementById("player-score").textContent =
       "Player: " + ++playerScore;
   } else if (cards.indexOf(card1) === cards.indexOf(card2)) {
@@ -79,4 +98,8 @@ function checkWinner(playerScore, computerScore) {
     deckHolder.textContent = "Computer Win!";
     console.log("computerWonnered");
   }
+}
+
+function displayRemaining(data) {
+  deckHolder.textContent = `Remaining cards:  ${data}`;
 }
