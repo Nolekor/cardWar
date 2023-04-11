@@ -5,15 +5,26 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <title>Card War!</title>
   </head>
   <body>
-    <header>
-      <h1>Card War!</h1>
-    </header>
+    <h1 id="title">Card War!</h1>
     <button id="new-deck">New Deck</button>
-    <div id="app"></div>
-    <button id="draw" disabled>Draw</button>
+    <span class="hidden" id="remaining-card">Remaining cards: </span>
+
+    <div id="cards">
+      <p class="computer-score" id="computer-score">Computer: 0</p>
+      <img id="computer-card" class="cardplaceholder"></img>
+      <img id="player-card" class="cardplaceholder"></img>
+      <p class="player-score" id="player-score">Player: 0</p>
+    </div>
+    <button id="draw" class="hidden">Draw</button>
 
     <script type="module" src="/main.js"></script>
   </body>
